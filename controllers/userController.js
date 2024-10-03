@@ -1,5 +1,6 @@
 
 const userModel = require('../models/userModel');
+const bcrypt = require('bcryptjs');
 
 function createUser(req, res) {
     const { username, password } = req.body;

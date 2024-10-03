@@ -7,7 +7,6 @@ const userModel = require('../models/userModel');
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[0];
-    console.log(token);
 
     // const token = authHeader;
 

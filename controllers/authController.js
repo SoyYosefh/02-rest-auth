@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = "AVerAdivinameEstaContraseniaHackerAVerSiPuedesSanaSanaColitaDeRana";
-const JWT_EXPIRES_IN = '120s';
+const JWT_EXPIRES_IN = '180s';
 
 async function login(req, res) {
     const { username, password } = req.body;
