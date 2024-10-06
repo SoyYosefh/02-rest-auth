@@ -1,6 +1,8 @@
 // userModel.js
 
 const bcrypt = require('bcryptjs');
+const { ref, get, set, push } = require("firebase/database");
+const { db } = require('../conexion'); // Importa la conexión a Firebase
 
 let users = [
 	{
@@ -10,19 +12,51 @@ let users = [
 	}
 ];
 
-// buscar usuarios
-function getUserByUsername(username) {
-	return users.find(user => user.username === username);
+// // buscar usuarios
+// function getUserByUsername(username) {
+// 	return users.find(user => user.username === username);
+// }
+
+// // buscar usuarios por apikey
+// function getUserByApikey(apikey) {
+// 	return users.find(user => user.apikey === apikey);
+// }
+
+// // crear usuarios
+// function createUser(newUser) {
+// 	users.push(newUser);
+// }
+
+// Buscar usuario por nombre de usuario
+async function getUserByUsername(username) {
+	const dbRef = ref(db, 'users');
+	const snapshot = await get(dbRef);
+
+	if (snapshot.exists()) {
+		const users = snapshot.val();
+		return Object.values(users).find(user => user.username === username);
+	} else {
+		return null;
+	}
 }
 
-// buscar usuarios por apikey
-function getUserByApikey(apikey) {
-	return users.find(user => user.apikey === apikey);
+// Buscar usuario por apikey
+async function getUserByApikey(apikey) {
+	const dbRef = ref(db, 'users');
+	const snapshot = await get(dbRef);
+
+	if (snapshot.exists()) {
+		const users = snapshot.val();
+		return Object.values(users).find(user => user.apikey === apikey);
+	} else {
+		return null;
+	}
 }
 
-// crear usuarios
-function createUser(newUser) {
-	users.push(newUser);
+// Crear usuario
+async function createUser(newUser) {
+	const newUserRef = push(ref(db, 'users'));
+	await set(newUserRef, newUser);
 }
 
 module.exports = {

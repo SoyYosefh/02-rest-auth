@@ -1,6 +1,8 @@
 // projectModel.js
 
 const { v4: uuidv4 } = require('uuid');
+const { ref, get, set, push } = require("firebase/database");
+const { db } = require('../conexion'); // Importa la conexión a Firebase
 
 let projects = [
     {
@@ -23,11 +25,40 @@ let projects = [
     }
 ];
 
-function getAllProjects() {
-    return projects;
+// function getAllProjects() {
+//     return projects;
+// }
+
+// Obtener todos los proyectos
+async function getAllProjects() {
+    const dbRef = ref(db, 'projects');
+    const snapshot = await get(dbRef);
+
+    if (snapshot.exists()) {
+        return snapshot.val();
+    } else {
+        return [];
+    }
 }
 
-function createProject(project) {
+// function createProject(project) {
+//     const newProject = {
+//         id: uuidv4(),
+//         name: project.name,
+//         description: project.description,
+//         startDate: project.startDate,
+//         endDate: project.endDate,
+//         status: project.status,
+//         budget: project.budget
+//     }
+//     projects.push(newProject);
+//     return newProject;
+// }
+
+// Crear un nuevo proyecto
+
+async function createProject(project) {
+    const newProjectRef = push(ref(db, 'projects'));
     const newProject = {
         id: uuidv4(),
         name: project.name,
@@ -36,10 +67,12 @@ function createProject(project) {
         endDate: project.endDate,
         status: project.status,
         budget: project.budget
-    }
-    projects.push(newProject);
+    };
+
+    await set(newProjectRef, newProject);
     return newProject;
 }
+
 
 module.exports = {
     getAllProjects,

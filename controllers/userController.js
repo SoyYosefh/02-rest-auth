@@ -2,10 +2,10 @@
 const userModel = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 
-function createUser(req, res) {
+async function createUser(req, res) {
     const { username, password } = req.body;
-    const user = userModel.getUserByUsername(username);
-
+    console.log(username, password);
+    const user = await userModel.getUserByUsername(username);
     if (user) {
         return res.status(400).json({
             code: 400,
@@ -19,8 +19,9 @@ function createUser(req, res) {
         password: bcrypt.hashSync(password, 10),
         apikey
     };
+    console.log(newUser);
 
-    userModel.createUser(newUser);
+    await userModel.createUser(newUser);
     return res.status(201).json({
         code: 201,
         message: 'Usuario creado exitosamente.',
